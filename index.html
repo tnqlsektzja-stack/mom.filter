@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리 집 기준을 찾는 가장 쉬운 시작 | 육아필터</title>
+<meta property="og:title" content="우리 집 기준을 찾는 가장 쉬운 시작 | 육아필터">
+<meta property="og:description" content="4가지 질문으로 우리 아이 성향과 내 육아 스타일을 파악해봐요.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #7F77DD;
+    --purple-dark: #534AB7;
+    --purple-light: #EEEDFE;
+    --purple-text: #3C3489;
+    --bg: #FAFAF8;
+    --card: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #6B6B6B;
+    --text-tertiary: #A0A0A0;
+    --border: #E8E8E4;
+    --border-hover: #C5C2F0;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px 80px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .top-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--purple);
+    letter-spacing: 0.04em;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .top-label::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 2px;
+    background: var(--purple);
+    border-radius: 1px;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeUp 0.35s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* INTRO */
+  .intro-tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--purple-light);
+    color: var(--purple-text);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .intro-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    word-break: keep-all;
+  }
+  .intro-title em {
+    font-style: normal;
+    color: var(--purple-dark);
+  }
+  .intro-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 32px;
+    word-break: keep-all;
+  }
+  .intro-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 32px;
+  }
+  .chip {
+    font-size: 12px;
+    padding: 5px 11px;
+    border-radius: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .btn-start {
+    width: 100%;
+    padding: 16px;
+    background: var(--purple-dark);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    font-family: 'Noto Sans KR', sans-serif;
+    letter-spacing: 0.01em;
+  }
+  .btn-start:hover { background: #3C3489; }
+  .btn-start:active { transform: scale(0.99); }
+  .intro-note {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-align: center;
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+
+  /* QUIZ */
+  .progress-wrap { margin-bottom: 32px; }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .progress-axis {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--purple);
+  }
+  .progress-count {
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--purple);
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .q-text {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.55;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    word-break: keep-all;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .opt-btn {
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    line-height: 1.6;
+    word-break: keep-all;
+  }
+  .opt-btn:hover {
+    border-color: var(--purple);
+    background: var(--purple-light);
+  }
+  .opt-btn:active { transform: scale(0.99); }
+
+  .q-note {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-align: center;
+    line-height: 1.6;
+    min-height: 18px;
+  }
+
+  /* RESULT */
+  .result-top {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 24px;
+    margin-bottom: 12px;
+  }
+  .result-emoji { font-size: 36px; margin-bottom: 12px; display: block; }
+  .result-type-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--purple);
+    margin-bottom: 4px;
+  }
+  .result-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+  .result-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    word-break: keep-all;
+  }
+
+  .guide-card {
+    background: #F5F4FC;
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .guide-row { display: flex; gap: 10px; align-items: flex-start; }
+  .guide-icon { font-size: 15px; min-width: 22px; padding-top: 1px; }
+  .guide-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--purple-text);
+    margin-bottom: 3px;
+    letter-spacing: 0.02em;
+  }
+  .guide-text {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.65;
+    word-break: keep-all;
+  }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .tag {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: var(--purple-light);
+    color: var(--purple-text);
+    font-weight: 500;
+  }
+
+  .cta-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    word-break: keep-all;
+  }
+  .cta-box strong { color: var(--text-primary); font-weight: 700; }
+
+  .action-row { display: flex; gap: 8px; }
+  .btn-main {
+    flex: 1;
+    padding: 14px;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--purple-dark);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.15s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-main:hover { background: #3C3489; }
+  .btn-sub {
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .btn-sub:hover { border-color: var(--border-hover); }
+
+  @media (max-width: 480px) {
+    body { padding: 28px 16px 60px; }
+    .intro-title { font-size: 22px; }
+    .q-text { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-label">육아필터</div>
+
+  <!-- INTRO -->
+  <div class="screen active" id="s-intro">
+    <span class="intro-tag">나의 육아 스타일 알아보기</span>
+    <div class="intro-title">우리 집 기준을 찾는<br><em>가장 쉬운 시작</em></div>
+    <div class="intro-desc">
+      4가지 질문으로 우리 아이 성향과<br>내 육아 스타일을 파악해봐요.<br>
+      정답 없이, 지금 느끼는 대로 골라주세요.
+    </div>
+    <div class="intro-chips">
+      <span class="chip">장난감·교구</span>
+      <span class="chip">외출용품</span>
+      <span class="chip">생활용품</span>
+      <span class="chip">식품·영양제</span>
+      <span class="chip">교육·학습 프로그램</span>
+    </div>
+    <button class="btn-start" onclick="start()">시작하기</button>
+    <div class="intro-note">약 1분 소요 · 우리 집에 맞는 육아템 고르는 눈이 생겨요</div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="s-quiz">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span class="progress-axis" id="q-label"></span>
+        <span class="progress-count" id="q-num"></span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="q-opts"></div>
+    <div class="q-note" id="q-note"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="s-result">
+    <div class="result-top">
+      <span class="result-emoji" id="r-emoji"></span>
+      <div class="result-type-label">우리 집 육아 스타일</div>
+      <div class="result-name" id="r-name"></div>
+      <div class="result-desc" id="r-desc"></div>
+    </div>
+    <div class="guide-card" id="r-guide"></div>
+    <div class="tags" id="r-tags"></div>
+    <div class="cta-box">
+      <strong>육아필터</strong>는 장난감·교구·외출용품·생활용품·식품·영양제·교육·학습 프로그램까지<br>
+      발달 기준으로 걸러낸 콘텐츠와 공구를 나눠요.<br>
+      내 유형을 저장해두고 팔로우하면 우리 집에 맞는 정보를 바로 찾을 수 있어요 :)
+    </div>
+    <div class="action-row">
+      <a class="btn-main" href="https://instagram.com/" target="_blank">인스타 팔로우하기 →</a>
+      <button class="btn-sub" onclick="restart()">다시 해보기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const qs = [
+  {
+    label: "아이 성향",
+    text: "새로운 환경이나 경험을 처음 접할 때 우리 아이는?",
+    opts: [
+      { label: "거부감 없이 받아들이는 편이에요 — 새로운 것도 금방 익숙해져요", axis: "child", val: "explore" },
+      { label: "익숙한 것을 선호해요 — 적응하는 데 시간이 필요한 편이에요", axis: "child", val: "careful" }
+    ],
+    note: ""
+  },
+  {
+    label: "아이 성향",
+    text: "한 가지에 얼마나 집중하나요?",
+    opts: [
+      { label: "금방 다른 걸로 넘어가요 — 관심사가 자주 바뀌어요", axis: "child", val: "explore" },
+      { label: "한번 빠지면 깊게 파요 — 같은 걸 반복하기도 해요", axis: "child", val: "careful" }
+    ],
+    note: "정답 없어요, 지금 우리 아이 모습 그대로 골라주세요 :)"
+  },
+  {
+    label: "부모 성향",
+    text: "육아템 살 때 나는?",
+    opts: [
+      { label: "후기·성분·발달 근거를 찾아보고 결정해요", axis: "parent", val: "evidence" },
+      { label: "주변 추천이나 내 직감으로 빠르게 결정해요", axis: "parent", val: "practical" }
+    ],
+    note: ""
+  },
+  {
+    label: "부모 성향",
+    text: "아이한테 뭔가 새로 시도할 때 나는?",
+    opts: [
+      { label: "미리 공부하고 준비된 다음에 시작해요", axis: "parent", val: "evidence" },
+      { label: "일단 해보면서 맞춰가는 편이에요", axis: "parent", val: "practical" }
+    ],
+    note: ""
+  }
+];
+
+const types = {
+  explore_evidence: {
+    emoji: "🔍",
+    name: "꼼꼼한 탐험대",
+    desc: "아이는 새로운 것에 거부감 없이 달려들고, 엄마는 근거를 따져가며 따라가요. 둘의 속도가 달라서 선택이 늦어질 때도 있지만, 한번 결정하면 잘 맞아요.",
+    guide: [
+      { icon: "⚠️", label: "자주 하는 실수", text: "성분·인증은 다 따졌는데 아이 흥미를 빠뜨려서 안 쓰게 됨 — 영양제, 식품도 마찬가지예요" },
+      { icon: "✅", label: "맞는 선택", text: "발달 근거 있으면서 아이가 직접 반응할 수 있는 것 — 탐색 자극이 있는 외출템, 식감 있는 식품류" },
+      { icon: "🚫", label: "피해야 할 선택", text: "스펙만 보고 아이 성향 무시한 구매, 또래 추천만 믿고 결정하는 것" }
+    ],
+    tags: ["발달 기준 육아템", "성분·안전 비교", "살 사람 vs 말 사람"]
+  },
+  explore_practical: {
+    emoji: "🚀",
+    name: "일단 해보는 집",
+    desc: "아이도 엄마도 일단 부딪혀보는 스타일이에요. 시도는 많은데 쌓이는 것도 많아지는 게 고민일 수 있어요.",
+    guide: [
+      { icon: "⚠️", label: "자주 하는 실수", text: "'일단 사보자'가 반복되면서 외출템·생활용품이 계속 쌓임 — 비슷한 것 여러 개 있는 경우 많아요" },
+      { icon: "✅", label: "맞는 선택", text: "오래 쓰고 활용도 높은 것 — 다기능 생활템, 단계별로 확장되는 아이템, 식품 정기구매" },
+      { icon: "🚫", label: "피해야 할 선택", text: "트렌드 따라 단기용으로 계속 바꾸는 패턴, 기능 하나짜리 아이템" }
+    ],
+    tags: ["실용 육아템 추천", "오래 쓰는 생활템", "공구 참여"]
+  },
+  careful_evidence: {
+    emoji: "🌿",
+    name: "완벽을 기다리는 집",
+    desc: "아이도 엄마도 신중해요. 준비는 철저한데 타이밍을 놓치는 게 가장 큰 고민이에요.",
+    guide: [
+      { icon: "⚠️", label: "자주 하는 실수", text: "완벽한 제품 찾다가 시기를 놓침 — 영양제·학습 프로그램에서 특히 이 패턴이 자주 나와요" },
+      { icon: "✅", label: "맞는 선택", text: "낯선 것에 적응 시간을 줄 수 있는 것 — 맛 적응 식품, 단계별 학습 프로그램, 익숙한 환경 외출템" },
+      { icon: "🚫", label: "피해야 할 선택", text: "자극 강하고 변화 많은 것, 잦은 브랜드 교체, 새 환경 노출 많은 외출 아이템" }
+    ],
+    tags: ["단계별 육아템", "검증 제품 리스트", "식품·영양 기준"]
+  },
+  careful_practical: {
+    emoji: "⚡",
+    name: "속도 차이 나는 집",
+    desc: "빠르게 가고 싶은 엄마와 천천히 적응하는 아이 사이에서 미스매치가 생기기 쉬워요. 아이 페이스를 아는 게 가장 큰 절약이에요.",
+    guide: [
+      { icon: "⚠️", label: "자주 하는 실수", text: "아이가 아직 적응 중인데 '안 쓰네'로 판단하고 너무 빨리 교체 — 식품, 학습 프로그램에서 자주 나와요" },
+      { icon: "✅", label: "맞는 선택", text: "생활에 자연스럽게 스며드는 것 — 루틴 식품, 익숙한 환경에서 쓰는 생활용품, 긴 호흡의 프로그램" },
+      { icon: "🚫", label: "피해야 할 선택", text: "트렌드 따라 빠르게 바꾸는 것, 낯선 장소 위주 외출템, 단기 효과 기대하는 학습템" }
+    ],
+    tags: ["생활 밀착 육아템", "루틴 식품 추천", "공구 알림"]
+  }
+};
+
+let scores = { child: [], parent: [] };
+
+function start() {
+  document.getElementById('s-intro').classList.remove('active');
+  document.getElementById('s-quiz').classList.add('active');
+  renderQ(0);
+}
+
+function renderQ(i) {
+  const q = qs[i];
+  document.getElementById('q-label').textContent = q.label;
+  document.getElementById('q-num').textContent = (i + 1) + ' / ' + qs.length;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-note').textContent = q.note;
+  document.getElementById('prog').style.width = ((i / qs.length) * 100) + '%';
+  const optsEl = document.getElementById('q-opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = o.label;
+    btn.onclick = () => {
+      if (o.axis === 'child') scores.child.push(o.val);
+      else scores.parent.push(o.val);
+      if (i < qs.length - 1) renderQ(i + 1);
+      else showResult();
+    };
+    optsEl.appendChild(btn);
+  });
+}
+
+function showResult() {
+  document.getElementById('s-quiz').classList.remove('active');
+  document.getElementById('s-result').classList.add('active');
+  document.getElementById('prog').style.width = '100%';
+  const childType = scores.child.filter(v => v === 'explore').length >= 1 ? 'explore' : 'careful';
+  const parentType = scores.parent.filter(v => v === 'evidence').length >= 1 ? 'evidence' : 'practical';
+  const t = types[childType + '_' + parentType];
+  document.getElementById('r-emoji').textContent = t.emoji;
+  document.getElementById('r-name').textContent = t.name;
+  document.getElementById('r-desc').textContent = t.desc;
+  document.getElementById('r-guide').innerHTML = t.guide.map(g =>
+    `<div class="guide-row"><span class="guide-icon">${g.icon}</span><div><div class="guide-label">${g.label}</div><div class="guide-text">${g.text}</div></div></div>`
+  ).join('');
+  document.getElementById('r-tags').innerHTML = t.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+}
+
+function restart() {
+  scores = { child: [], parent: [] };
+  document.getElementById('s-result').classList.remove('active');
+  document.getElementById('s-intro').classList.add('active');
+}
+</script>
+</body>
+</html>
