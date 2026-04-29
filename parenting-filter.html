@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>살걸 vs 살필요없었던 육아템 | 육아필터</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg: #F5F0E8;
+    --white: #FFFFFF;
+    --text-dark: #1C1C1C;
+    --text-mid: #555555;
+    --text-light: #999999;
+    --accent: #5B5BD6;
+    --accent-soft: #EEEEFF;
+    --divider: #E2D9CC;
+    --card-alt: #F0EBE1;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .anim { opacity: 0; }
+  .anim-1 { animation: fadeUp .55s ease .05s forwards; }
+  .anim-2 { animation: fadeUp .55s ease .15s forwards; }
+  .anim-3 { animation: fadeUp .55s ease .25s forwards; }
+  .anim-4 { animation: fadeUp .55s ease .35s forwards; }
+  .anim-5 { animation: fadeUp .55s ease .45s forwards; }
+  .anim-6 { animation: fadeUp .55s ease .55s forwards; }
+
+  .top-bar {
+    padding: 28px 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .top-bar-line { width: 24px; height: 2px; background: var(--accent); }
+  .top-bar-name { font-size: 13px; font-weight: 500; color: var(--accent); letter-spacing: .04em; }
+
+  .section { padding: 0 20px; }
+  .divider { margin: 28px 20px; height: 1px; background: var(--divider); }
+
+  /* HOOK */
+  .hook { margin-top: 36px; }
+
+  .badge {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 13px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+
+  .hook-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--text-dark);
+    margin-bottom: 14px;
+    word-break: keep-all;
+  }
+  .hook-title .accent { color: var(--accent); }
+
+  .hook-sub {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-mid);
+    line-height: 1.75;
+    word-break: keep-all;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 24px 20px;
+  }
+
+  .card-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-light);
+    letter-spacing: .08em;
+    margin-bottom: 18px;
+  }
+
+  /* 공감 */
+  .empathy-block { margin-bottom: 22px; }
+
+  .emp-tag {
+    display: inline-block;
+    background: var(--card-alt);
+    color: var(--text-mid);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+
+  .emp-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.5;
+    margin-bottom: 5px;
+    word-break: keep-all;
+  }
+
+  .emp-desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-mid);
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+
+  .quote {
+    background: var(--bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-mid);
+    line-height: 1.8;
+    word-break: keep-all;
+  }
+
+  /* 전환 */
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.55;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    word-break: keep-all;
+  }
+
+  .reason-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+
+  .reason-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-mid);
+    line-height: 1.65;
+    word-break: keep-all;
+  }
+
+  .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 9px;
+  }
+
+  .highlight-box {
+    background: var(--text-dark);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .hl-label {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,.4);
+    letter-spacing: .07em;
+    margin-bottom: 10px;
+  }
+  .hl-text {
+    font-size: 19px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.55;
+    word-break: keep-all;
+  }
+  .hl-text span { color: #A8A6FF; }
+
+  .sub-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-mid);
+    line-height: 1.75;
+    word-break: keep-all;
+  }
+
+  /* 철학 */
+  .phil-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+
+  .phil-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--card-alt);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .phil-icon { font-size: 13px; flex-shrink: 0; margin-top: 2px; color: var(--accent); }
+  .phil-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-dark);
+    line-height: 1.65;
+    word-break: keep-all;
+  }
+  .phil-text b { font-weight: 700; color: var(--text-dark); }
+
+  .phil-conclusion {
+    background: var(--accent-soft);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+  }
+  .pc-main {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.65;
+    margin-bottom: 8px;
+    word-break: keep-all;
+  }
+  .pc-sub {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-mid);
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+
+  /* CTA */
+  .cta-card {
+    background: var(--accent);
+    border-radius: 20px;
+    padding: 28px 22px;
+  }
+  .cta-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.55;
+    color: #fff;
+    margin-bottom: 12px;
+    word-break: keep-all;
+  }
+  .cta-desc {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255,255,255,.8);
+    line-height: 1.75;
+    margin-bottom: 22px;
+    word-break: keep-all;
+  }
+  .cta-btn {
+    display: block;
+    background: #fff;
+    color: var(--accent);
+    text-align: center;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .cta-divider { height: 1px; background: rgba(255,255,255,.2); margin: 22px 0; }
+
+  .test-nudge {
+    background: rgba(255,255,255,.12);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .tn-emoji { font-size: 22px; margin-bottom: 8px; display: block; }
+  .tn-text {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,.9);
+    line-height: 1.75;
+    word-break: keep-all;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar anim anim-1">
+  <div class="top-bar-line"></div>
+  <span class="top-bar-name">육아필터</span>
+</div>
+
+<div class="section anim anim-2">
+  <div class="hook">
+    <div class="badge">살걸 vs 살필요없었던 육아템</div>
+    <div class="hook-title">
+      좋아 보여서 샀는데<br>결국 <span class="accent">처박템</span> 된 것들,<br>하나쯤 꼭 있더라고요
+    </div>
+    <div class="hook-sub">
+      앞으로 애 키우면서 선택할 것들이 아직 많은데<br>후회 없이 잘 키우고 싶지 않으세요?
+    </div>
+  </div>
+</div>
+
+<div class="divider anim anim-2"></div>
+
+<div class="section anim anim-3">
+  <div class="card">
+    <div class="card-label">공감해요</div>
+
+    <div class="empathy-block">
+      <div class="emp-tag">교구 · 학습지</div>
+      <div class="emp-title">엄마 욕심에 산 교구, 학습지</div>
+      <div class="emp-desc">막상 애는 큰 관심 없고 엄마도 힘들어서 방치되거나 억지로 붙들고 하다가 결국 나만 지침</div>
+    </div>
+
+    <div class="empathy-block">
+      <div class="emp-tag">영양제 · 학습 프로그램</div>
+      <div class="emp-title">키 커지고 병 안 걸린다는 영양제<br>영어가 술술 나온다는 학습 프로그램</div>
+      <div class="emp-desc">솔직히… 효과 있는 건지 모르겠음</div>
+    </div>
+
+    <div class="quote">
+      좋다길래 혹했는데<br>
+      이게 충동구매인지 필요한 건지<br>
+      살 때마다 찝찝한데 일단 사고 봄
+    </div>
+  </div>
+</div>
+
+<div class="divider anim anim-3"></div>
+
+<div class="section anim anim-4">
+  <div class="card">
+    <div class="card-label">패턴이 보이더라고요</div>
+    <div class="section-title">후회한 것들,<br>이유는 다 달랐어요</div>
+
+    <div class="reason-list">
+      <div class="reason-item"><div class="dot"></div><span>알고 보니 우리 애 발달단계랑 안 맞기도 했고</span></div>
+      <div class="reason-item"><div class="dot"></div><span>효과가 있는지 없는지 확인할 방법이 없는데 그냥 믿고 사기도 했고</span></div>
+      <div class="reason-item"><div class="dot"></div><span>엄마가 해줄 수 있는 상황이 아니거나 애가 그냥 관심이 없기도 했고</span></div>
+      <div class="reason-item"><div class="dot"></div><span>성능이 특별히 좋다고 해서 비싼 걸로 샀는데 막상 써보니 저렴한 걸로 샀어도 괜찮았겠네 싶기도 했고</span></div>
+    </div>
+
+    <div class="highlight-box">
+      <div class="hl-label">공통점</div>
+      <div class="hl-text"><span>내 확신 없이,</span><br>남의 말만 믿고 샀을 때</div>
+    </div>
+
+    <div class="sub-text">
+      후기가 좋아서, 다들 산다니까, 발달에 좋다고 해서<br>
+      그게 기준이 되는 순간<br>
+      우리 애랑 안 맞아도 걸러낼 수가 없어요
+    </div>
+
+    <div style="margin-top: 20px; background: var(--card-alt); border-radius: 14px; padding: 18px 16px;">
+      <div style="font-size: 11px; font-weight: 500; color: var(--text-light); letter-spacing: .07em; margin-bottom: 12px;">사실은요</div>
+      <div style="font-size: 14px; font-weight: 500; color: var(--text-dark); line-height: 1.75; word-break: keep-all;">
+        육아템 시장은 원래 <b>엄마의 불안을 사는 곳</b>이에요<br><br>
+        안 사면 뒤처질 것 같고<br>
+        사면 뭔가 해준 것 같은 느낌<br><br>
+        근데 그 불안이 기준이 되는 순간<br>
+        집에 물건만 쌓이고<br>
+        <b>애한테 맞는 건 따로 있다는 걸</b><br>
+        나중에서야 알게 돼요
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider anim anim-4"></div>
+
+<div class="section anim anim-5">
+  <div class="card">
+    <div class="card-label">만족한 구매의 공통점</div>
+    <div class="section-title">반대로 만족한 구매엔<br>공통점이 있었어요</div>
+
+    <div class="phil-list">
+      <div class="phil-item">
+        <div class="phil-icon">✦</div>
+        <div class="phil-text">비싼 교구보다 <b>엄마가 지속할 수 있는 것</b></div>
+      </div>
+      <div class="phil-item">
+        <div class="phil-icon">✦</div>
+        <div class="phil-text"><b>우리 애 기질에 맞는 것</b></div>
+      </div>
+      <div class="phil-item">
+        <div class="phil-icon">✦</div>
+        <div class="phil-text">성능, 성분, 함량을 파악하고 <b>우리 애한테 부족한 걸 채워주는 것</b></div>
+      </div>
+      <div class="phil-item">
+        <div class="phil-icon">✦</div>
+        <div class="phil-text">없어도 되는 것과 있으면 좋은 것을 구분해서 <b>필요에 의해 선택한 것</b></div>
+      </div>
+      <div class="phil-item">
+        <div class="phil-icon">✦</div>
+        <div class="phil-text"><b>엄마의 고충을 실제로 덜어주는 것</b></div>
+      </div>
+    </div>
+
+    <div class="phil-conclusion">
+      <div class="pc-main">"이게 좋다니까"가 아니라<br>내가 왜 사는지 알고 사는 것</div>
+      <div class="pc-sub">그 기준 하나가 처박템을 줄이고<br>찝찝한 구매를 없애요</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider anim anim-5"></div>
+
+<div class="section anim anim-6">
+  <div class="cta-card">
+    <div class="cta-title">살까 말까 고민되는 순간<br>혼자 후기 찾아 헤매지 않아도 돼요</div>
+    <div class="cta-desc">고민은 줄이고 결정은 빠르게<br>그런 콘텐츠 계속 올라올 예정이에요</div>
+    <a href="https://instagram.com/mom.filter" target="_blank" class="cta-btn">팔로우하면 다음 구매가 편해져요 👉</a>
+    <div class="cta-divider"></div>
+    <div class="test-nudge">
+      <span class="tn-emoji">🔥</span>
+      <div class="tn-text">
+        우리 아이 기준이 아직 없다면<br>
+        가볍게 30초 테스트부터 시작해봐요<br>
+        우리 집 기준 잡는 첫걸음이에요
+      </div>
+      <a href="https://tnqlsektzja-stack.github.io/mom.filter" target="_blank" style="display:block; margin-top: 14px; background: #fff; color: var(--accent); text-align: center; padding: 13px; border-radius: 10px; font-size: 14px; font-weight: 700; text-decoration: none;">30초 테스트 시작하기 👆</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
