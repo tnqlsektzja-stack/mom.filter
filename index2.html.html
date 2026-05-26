@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리집 놀이 반응 체크 | 육아필터</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #FAFAF8;
+    --surface: #FFFFFF;
+    --surface2: #F5F4F0;
+    --border: #E8E6DF;
+    --text: #1A1A18;
+    --text2: #6B6960;
+    --text3: #A8A69F;
+    --accent: #5B4FD4;
+    --accent-light: #EEEDFE;
+    --accent-mid: #AFA9EC;
+    --green: #2E7D5A;
+    --green-light: #EAF4EE;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  html { font-size: 16px; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 20px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner { max-width: 480px; margin: 0 auto; }
+  .brand { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; }
+  .header h1 { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .header p { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+  .progress-bar-wrap { margin-top: 12px; background: var(--border); border-radius: 99px; height: 4px; }
+  .progress-bar { height: 4px; border-radius: 99px; background: var(--accent); transition: width 0.3s ease; width: 0%; }
+
+  .content { max-width: 480px; margin: 0 auto; padding: 20px 16px 0; }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .section-title-left { display: flex; align-items: center; gap: 8px; }
+  .section-emoji { font-size: 16px; }
+  .section-name { font-size: 14px; font-weight: 700; color: var(--text); }
+  .section-count { font-size: 11px; font-weight: 500; color: var(--accent); background: var(--accent-light); padding: 3px 9px; border-radius: 20px; }
+
+  .group { border-top: 1px solid var(--border); }
+  .group:first-of-type { border-top: none; }
+  .group-label {
+    padding: 10px 16px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .check-item:active { background: var(--surface2); }
+
+  .check-box {
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    background: var(--surface);
+  }
+  .check-box svg { opacity: 0; transition: opacity 0.15s; }
+  .check-item.checked .check-box {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check-item.checked .check-box svg { opacity: 1; }
+  .check-item.checked .check-label { color: var(--accent); font-weight: 500; }
+
+  .check-label { font-size: 14px; color: var(--text); line-height: 1.4; }
+
+  .toy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .toy-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+  .toy-textarea::placeholder { color: var(--text3); }
+  .toy-hint { padding: 0 16px 12px; font-size: 11px; color: var(--text3); }
+
+  .result-card {
+    background: var(--surface);
+    border: 1.5px solid var(--accent-mid);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .result-header {
+    padding: 12px 16px;
+    background: var(--accent-light);
+    border-bottom: 1px solid var(--accent-mid);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .result-header span { font-size: 13px; font-weight: 700; color: var(--accent); }
+  .result-header small { font-size: 11px; color: var(--accent-mid); margin-left: auto; }
+
+  .prompt-preview {
+    padding: 14px 16px;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    min-height: 60px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .btn-row { display: flex; gap: 8px; padding: 12px 16px; }
+  .btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-copy {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-copy:active { transform: scale(0.97); background: #4A3FBB; }
+  .btn-reset {
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+    flex: 0 0 auto;
+    width: 48px;
+    padding: 12px 0;
+    font-size: 18px;
+  }
+  .btn-reset:active { transform: scale(0.97); }
+
+  .copy-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--text);
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 99px;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 999;
+  }
+  .copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+  .filter-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--green);
+    background: var(--green-light);
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .filter-badge::before { content: '▼'; font-size: 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="brand">육아필터</div>
+    <h1>우리집 놀이 반응 체크</h1>
+    <p>체크하고 GPT에 붙여넣기 → 맞춤 놀이 루틴 완성</p>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div style="padding: 4px 0 8px;">
+    <span class="filter-badge">발달기준 육아템 필터</span>
+  </div>
+
+  <!-- 아이 섹션 -->
+  <div class="section-card">
+    <div class="section-title">
+      <div class="section-title-left">
+        <span class="section-emoji">👶</span>
+        <span class="section-name">우리 아이는…</span>
+      </div>
+      <span class="section-count" id="badge-child">0개</span>
+    </div>
+
+    <div class="group">
+      <div class="group-label">🎁 새 장난감 꺼냈을 때</div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="새 장난감: 바로 달려감">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">바로 달려감</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="새 장난감: 몇 번 봐야 만짐">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">몇 번 봐야 만짐</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="새 장난감: 원래 하던 거 먼저 찾음">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">원래 하던 거 먼저 찾음</span>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label">🎲 오래 머무는 놀이</div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="오래 머무는 놀이: 같은 놀이 반복">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">같은 놀이 반복</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="오래 머무는 놀이: 역할놀이">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">역할놀이</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="오래 머무는 놀이: 몸 움직이는 놀이">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">몸 움직이는 놀이</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="오래 머무는 놀이: 맞추고 조작하는 놀이">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">맞추고 조작하는 놀이</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="오래 머무는 놀이: 물놀이/감각놀이">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">물놀이/감각놀이</span>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label">💭 흥미가 깨지는 순간</div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="흥미가 깨지는 순간: 설명 많아질 때">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">설명 많아질 때</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="흥미가 깨지는 순간: 어렵거나 실패할 때">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">어렵거나 실패할 때</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="흥미가 깨지는 순간: 반복되면">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">반복되면</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="흥미가 깨지는 순간: 엄마 개입 많아질 때">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">엄마 개입 많아질 때</span>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label">🧩 놀이 스타일</div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="놀이 스타일: 혼자 오래 놂">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">혼자 오래 놂</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="놀이 스타일: 같이 해야 오래 감">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">같이 해야 오래 감</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="놀이 스타일: 왔다 갔다 자유롭게 놂">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">왔다 갔다 자유롭게 놂</span>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label">👀 자주 보이는 모습</div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="자주 보이는 모습: 넣었다 뺐다 반복">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">넣었다 뺐다 반복</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="자주 보이는 모습: 정리/분류 좋아함">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">정리/분류 좋아함</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="자주 보이는 모습: 움직이는 걸 좋아함">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">움직이는 걸 좋아함</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="자주 보이는 모습: 상상놀이 좋아함">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">상상놀이 좋아함</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="child" data-text="자주 보이는 모습: 같은 놀이 반복함">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">같은 놀이 반복함</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 엄마 섹션 -->
+  <div class="section-card">
+    <div class="section-title">
+      <div class="section-title-left">
+        <span class="section-emoji">👩</span>
+        <span class="section-name">나는…</span>
+      </div>
+      <span class="section-count" id="badge-mom">0개</span>
+    </div>
+
+    <div class="group">
+      <div class="group-label">😵 놀이할 때 힘든 건</div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="힘든 점: 계속 놀아줘야 하는 느낌">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">계속 놀아줘야 하는 느낌</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="힘든 점: 어질러지는 거">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">어질러지는 거</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="힘든 점: 뭘 해줘야 할지 모르겠음">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">뭘 해줘야 할지 모르겠음</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="힘든 점: 금방 싫증내는 거">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">금방 싫증내는 거</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="힘든 점: 죄책감">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">죄책감</span>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label">🪫 내 스타일은</div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="내 스타일: 계획 세우는 편">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">계획 세우는 편</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="내 스타일: 즉흥적인 편">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">즉흥적인 편</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="내 스타일: 체력 소모에 민감">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">체력 소모에 민감</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="내 스타일: 집안 정리가 중요">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">집안 정리가 중요</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="내 스타일: 애 반응에 흔들림">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">애 반응에 흔들림</span>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-label">🌱 내가 원하는 건</div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="원하는 것: 혼자노는 시간">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">혼자노는 시간</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="원하는 것: 덜 어지러운 놀이">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">덜 어지러운 놀이</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="원하는 것: 짧고 쉽게 가능한 놀이">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">짧고 쉽게 가능한 놀이</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="원하는 것: 발달 불안 줄이기">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">발달 불안 줄이기</span>
+      </div>
+      <div class="check-item" onclick="toggle(this)" data-group="mom" data-text="원하는 것: 교구 실패 줄이기">
+        <div class="check-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="check-label">교구 실패 줄이기</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 장난감 -->
+  <div class="toy-card">
+    <div class="section-title">
+      <div class="section-title-left">
+        <span class="section-emoji">🧸</span>
+        <span class="section-name">우리 집에 있는 장난감/교구</span>
+      </div>
+    </div>
+    <textarea class="toy-textarea" id="toy-input" placeholder="예) 몬테소리 분홍탑, 레고 듀플로, 소꿉놀이 세트…" oninput="updatePrompt()"></textarea>
+    <p class="toy-hint">쉼표로 구분 · 비워두면 일반 추천으로 나와요</p>
+  </div>
+
+  <!-- 결과 -->
+  <div class="result-card">
+    <div class="result-header">
+      <span>🤖 GPT 프롬프트 자동 완성</span>
+      <small id="total-count">0개 선택됨</small>
+    </div>
+    <div class="prompt-preview" id="prompt-box">위에서 해당되는 항목을 체크하면 여기에 GPT 프롬프트가 자동으로 완성돼요.</div>
+    <div class="btn-row">
+      <button class="btn btn-copy" onclick="copyPrompt()">복사하고 GPT에 붙여넣기</button>
+      <button class="btn btn-reset" onclick="resetAll()" title="초기화">↺</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="copy-toast" id="toast">✓ 복사됐어요! ChatGPT에 붙여넣기 하세요</div>
+
+<script>
+const SYSTEM_PROMPT = `너는 아이와 엄마의 "놀이 성향 차이"와 "덜 소모되는 육아 흐름"을 정리해주는 역할이야.
+아래 내용은 체크리스트에서 직접 선택한 항목들이야.
+즉, "우리 아이/엄마에게 해당된다고 느낀 반응들"만 남겨둔 상태야.
+
+이 선택 결과를 기반으로:
+1. 우리 아이 놀이 반응 특징
+2. 우리 아이 성향에 맞는 장난감/교구 특징
+3. 우리집에서 현실적으로 유지 가능한 놀이 흐름
+4. 아래에 적은 이미 있는 장난감/교구를 더 편하게 활용할 방법
+5. 하루 10~20분 기준 현실적인 놀이 루틴
+
+를 알려줘.
+
+답변은 전문가처럼 딱딱하거나 길게 설명하지 말고,
+엄마가 바로 이해할 수 있게 짧고 직관적으로 정리해줘.
+각 항목은:
+- 핵심만 1~3줄
+- 어려운 전문가 표현 없이
+- 현실육아 말투로
+- 바로 적용 가능한 느낌으로
+정리해줘.`;
+
+const TOTAL_ITEMS = 35;
+
+function toggle(el) {
+  el.classList.toggle('checked');
+  updatePrompt();
+}
+
+function getGroupedItems(group) {
+  const items = [...document.querySelectorAll(`.check-item.checked[data-group="${group}"]`)];
+  const groups = {};
+  items.forEach(el => {
+    const [g, v] = el.dataset.text.split(': ');
+    if (!groups[g]) groups[g] = [];
+    groups[g].push('- ' + v);
+  });
+  let result = '';
+  for (const [g, vals] of Object.entries(groups)) {
+    result += `\n${g}\n${vals.join('\n')}`;
+  }
+  return result;
+}
+
+function updatePrompt() {
+  const childItems = getGroupedItems('child');
+  const momItems = getGroupedItems('mom');
+  const toys = document.getElementById('toy-input').value.trim();
+
+  const childCount = document.querySelectorAll('.check-item.checked[data-group="child"]').length;
+  const momCount = document.querySelectorAll('.check-item.checked[data-group="mom"]').length;
+  const total = childCount + momCount;
+
+  document.getElementById('badge-child').textContent = childCount + '개';
+  document.getElementById('badge-mom').textContent = momCount + '개';
+  document.getElementById('total-count').textContent = total + '개 선택됨';
+  document.getElementById('progress-bar').style.width = Math.min(100, Math.round(total / TOTAL_ITEMS * 100)) + '%';
+
+  if (total === 0) {
+    document.getElementById('prompt-box').textContent = '위에서 해당되는 항목을 체크하면 여기에 GPT 프롬프트가 자동으로 완성돼요.';
+    return;
+  }
+
+  const toyLine = toys
+    ? `\n\n[우리 집에 있는 장난감/교구]\n${toys}`
+    : '\n\n[우리 집에 있는 장난감/교구]\n없음';
+
+  const prompt = `${SYSTEM_PROMPT}\n\n---\n[👶 우리 아이는]${childItems || '\n(선택 없음)'}\n\n[👩 나는]${momItems || '\n(선택 없음)'}${toyLine}`;
+  document.getElementById('prompt-box').textContent = prompt;
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-box').textContent;
+  if (text.startsWith('위에서')) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  });
+}
+
+function resetAll() {
+  document.querySelectorAll('.check-item.checked').forEach(el => el.classList.remove('checked'));
+  document.getElementById('toy-input').value = '';
+  updatePrompt();
+}
+</script>
+</body>
+</html>
